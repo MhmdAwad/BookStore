@@ -1,32 +1,51 @@
+import 'dart:ui';
+
 import 'package:book_store/models/Categories.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainCategoryItem extends StatelessWidget {
   final Categories category;
-
-
   MainCategoryItem(this.category);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      child: Stack(
-        children: [
-          Image.network(
-            category.imageUrl,
-          ),
-          Positioned(
-            child: Container(
-              child: Text(
-                category.title,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              color: Colors.black54,
+    return GestureDetector(
+      onTap: (){
+
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Card(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                  Image.network(
+                    category.imageUrl,fit: BoxFit.cover,
+                ),
+                BackdropFilter(
+                  child: Container(
+                    color: Colors.black12,
+                  ),
+                  filter: ImageFilter.blur(sigmaY: 1.5, sigmaX: 1.5),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  child: Container(
+                    width: double.infinity,
+                    child: Text(
+                      category.title,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    color: Colors.black54,
+                  ),
+                )
+              ],
             ),
-          )
-        ],
+        ),
       ),
     );
   }

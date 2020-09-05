@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MainCategoryScreen extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
-    final categoriesData = Provider.of<CategoriesProvider>(context);
+    final categoriesData = Provider.of<CategoriesProvider>(context, listen: false);
     final categoriesList = categoriesData.categoryItems;
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        mainAxisSpacing: 20,
-        crossAxisCount: 2,
-        childAspectRatio: 3/2,
-        crossAxisSpacing: 20
+    return Scaffold(
+      appBar: AppBar(title: Text("All Categories"),),
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisSpacing: 10,
+          crossAxisCount: 2,
+          childAspectRatio: 3/2,
+          crossAxisSpacing: 10
+        ),
+       itemBuilder: (ctx, i) => MainCategoryItem(categoriesList[i]),
+        itemCount: categoriesList.length,
       ),
-     itemBuilder: (ctx, i) => MainCategoryItem(categoriesList[i]),
-      itemCount: categoriesList.length,
     );
   }
 }
