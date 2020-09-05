@@ -19,9 +19,11 @@ class DrawerItem extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text(
-              text,
-              style: Theme.of(context).textTheme.headline6,
+            Expanded(
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.headline6,
+              ),
             ),
           ])),
     );
