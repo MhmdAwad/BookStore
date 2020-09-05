@@ -24,6 +24,9 @@ class MyApp extends StatelessWidget {
           title: 'BookStore',
           theme: ThemeData(
             primarySwatch: Colors.blue,
+            textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(fontSize: 20, color:Colors.black)
+            )
           ),
           home: MainCategoryScreen(),
           routes: {
