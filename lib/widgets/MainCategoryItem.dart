@@ -35,6 +35,7 @@ class MainCategoryItem extends StatelessWidget {
                   right: 0,
                   left: 0,
                   child: Container(
+                    padding: const EdgeInsets.all(4),
                     width: double.infinity,
                     child: Text(
                       category.title,

@@ -9,7 +9,6 @@ class SpecificCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     String category = ModalRoute.of(context).settings.arguments;
     final booksProvider = Provider.of<BooksProvider>(context, listen: false);
-    booksProvider.pushBooks();
     final booksList = Provider.of<BooksProvider>(context, listen: false).booksList;
 
     return Container(

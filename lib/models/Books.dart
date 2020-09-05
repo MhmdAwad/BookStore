@@ -8,9 +8,10 @@ class Books{
   final int categoryId;
   final String bookPDF;
   final String bookCover;
+  final String bookDescription;
 
   Books(this.bookId, this.bookTitle, this.uploaderName, this.uploaderId,
-      this.rating, this.categoryId,this.bookPDF, this.bookCover);
+      this.rating, this.categoryId,this.bookPDF, this.bookCover,this.bookDescription);
 
   Map<String, Object> toJson(){
     return {
@@ -21,7 +22,8 @@ class Books{
       "rating":rating,
       "categoryId":categoryId,
       "bookPDF":bookPDF,
-      "bookCover":bookCover
+      "bookCover":bookCover,
+      "bookDescription":bookDescription
     };
   }
 }
