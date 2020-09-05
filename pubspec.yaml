@@ -24,6 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^4.3.2+1
+  http: ^0.12.2
+
 
 
 

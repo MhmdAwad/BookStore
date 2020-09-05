@@ -1,6 +1,7 @@
 class Categories {
+  final int id;
   final String imageUrl;
   final String title;
 
-  Categories(this.imageUrl, this.title);
+  Categories(this.id,this.imageUrl, this.title);
 }
