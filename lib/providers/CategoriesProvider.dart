@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 
 class CategoriesProvider with ChangeNotifier{
+//  final String _token;
+//  final String _userID;
+//  CategoriesProvider(this._token, this._userID);
 
   List<Categories> _categoriesList = [
     Categories(

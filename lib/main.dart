@@ -18,33 +18,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (ctx) => CategoriesProvider()),
-        ChangeNotifierProvider(create: (ctx) => BooksProvider()),
         ChangeNotifierProvider(create: (ctx) => UserProvider()),
+        ChangeNotifierProvider(create: (ctx) => BooksProvider()),
+        ChangeNotifierProvider(create: (ctx) => CategoriesProvider()),
+//        ChangeNotifierProxyProvider<UserProvider, CategoriesProvider>(
+//          update: (ctx, auth, _) => CategoriesProvider(
+//            auth.token,
+//            auth.userId,
+//          ),
+//        ),
       ],
-      child: MaterialApp(
-        title: 'BookStore',
-        theme: ThemeData(
-            primarySwatch: Colors.purple,
-            accentColor: Colors.deepOrange,
-            textTheme: ThemeData.light().textTheme.copyWith(
-                headline6: TextStyle(fontSize: 20, color: Colors.black))),
-        home: Consumer<UserProvider>(
-          builder: (ctx, auth,child)=>  auth.isAuth
+      child: Consumer<UserProvider>(
+        builder: (ctx, auth, child) => MaterialApp(
+          title: 'BookStore',
+          theme: ThemeData(
+              primarySwatch: Colors.purple,
+              accentColor: Colors.deepOrange,
+              textTheme: ThemeData.light().textTheme.copyWith(
+                  headline6: TextStyle(fontSize: 20, color: Colors.black))),
+          home: auth.isAuth
               ? MainCategoryScreen()
               : FutureBuilder(
-            future: auth.tryAutoLogin(),
-            builder: (ctx, authResultSnapshot) =>
-            authResultSnapshot.connectionState ==
-                ConnectionState.waiting
-                ? SplashScreen()
-                : AuthScreen(),
-          ),
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen(),
+                ),
+          routes: {
+            AuthScreen.ROUTE_NAME: (ctx) => AuthScreen(),
+            SpecificCategory.ROUTE_NAME: (ctx) => SpecificCategory(),
+            UploadBookScreen.ROUTE_NAME: (ctx) => UploadBookScreen(),
+          },
         ),
-        routes: {
-          SpecificCategory.ROUTE_NAME: (ctx) => SpecificCategory(),
-          UploadBookScreen.ROUTE_NAME: (ctx) => UploadBookScreen()
-        },
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MainCategoryScreen extends StatelessWidget {
-
+  static const String ROUTE_NAME = "MainCategoryScreen";
   @override
   Widget build(BuildContext context) {
     final categoriesData = Provider.of<CategoriesProvider>(context, listen: false);

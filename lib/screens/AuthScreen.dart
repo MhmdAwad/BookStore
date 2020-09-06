@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatelessWidget {
+  static const String ROUTE_NAME = "AuthScreen";
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -36,6 +38,7 @@ class _AuthCardState extends State<AuthCard> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _form = GlobalKey<FormState>();
+  var isLoading = false;
   var expand = false;
 
   void changeCardHeight(bool changeExpand) {
@@ -45,20 +48,32 @@ class _AuthCardState extends State<AuthCard> {
       });
   }
 
-  void authentication(bool isLogin, UserProvider user) async {
+  void changeLoading(){
+    setState(() {
+      isLoading = !isLoading;
+    });
+  }
+  void authentication(bool isLogin) async {
     if (!_form.currentState.validate()) {
       changeCardHeight(true);
       return;
     }
     changeCardHeight(false);
+    changeLoading();
     try {
       if (isLogin)
-        await user.login(_emailController.text, _passwordController.text);
+        await Provider.of<UserProvider>(context, listen: false)
+            .login(_emailController.text, _passwordController.text);
       else
-        await user.signUp(_userNameController.text, _emailController.text,
-            _passwordController.text);
+        await Provider.of<UserProvider>(context, listen: false).signUp(
+          _userNameController.text,
+          _emailController.text,
+          _passwordController.text,
+        );
     } on HttpException catch (error) {
-      _showErrorDialog(user.authError(error.toString()));
+      _showErrorDialog(Provider.of<UserProvider>(context, listen: false)
+          .authError(error.toString()));
+      changeLoading();
     }
   }
 
@@ -147,7 +162,7 @@ class _AuthCardState extends State<AuthCard> {
                     SizedBox(
                       height: 10,
                     ),
-                    user.isLoading
+                    isLoading
                         ? CircularProgressIndicator()
                         : RaisedButton(
                             color: Theme.of(context).primaryColor,
@@ -163,7 +178,7 @@ class _AuthCardState extends State<AuthCard> {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
                             ),
-                            onPressed: () => authentication(user.isLogin, user),
+                            onPressed: () => authentication(user.isLogin),
                           ),
                     FlatButton(
                       child: Text(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:book_store/models/HttpException.dart';
@@ -7,13 +8,13 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
-  var isLoading = false;
   var isLogin = true;
-  String _token ;
+  String _token;
   String _userID;
   DateTime _expireDate;
-  static const String _LOGIN="verifyPassword";
-  static const String _SIGN_UP="signupNewUser";
+  Timer _authTimer;
+  static const String _LOGIN = "verifyPassword";
+  static const String _SIGN_UP = "signupNewUser";
 
   String get token {
     if (_expireDate != null &&
@@ -37,87 +38,100 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _auth({
-    String urlSegment,
-    String name,
-    String email,
-    String pass,
-  }) async {
-    _loading();
+  Future<void> _auth({String urlSegment, String name, String email, String pass}) async {
     final url =
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$urlSegment?key=AIzaSyC8t22p96pJ1RCWwTcXhfUF5l_IWpGdVBw';
 
-      final response = await http.post(url,
-          body: json.encode({
-            "email": email,
-            "password": pass,
-            "displayName": name,
-            'returnSecureToken': true,
-          }));
-      final responseData = json.decode(response.body);
-      _loading();
-      if (responseData["error"] != null)
-        throw HttpException(responseData["error"]["message"]);
-      else if(urlSegment==_SIGN_UP)
-        changeLoginStatus();
+    final response = await http.post(url,
+        body: json.encode({
+          "email": email,
+          "password": pass,
+          'returnSecureToken': true,
+        }));
+    final responseData = json.decode(response.body);
+    if (responseData["error"] != null)
+      throw HttpException(responseData["error"]["message"]);
     _saveUserToken(responseData);
   }
 
-
-  Future<bool> tryAutoLogin()async{
+  Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
       return false;
     }
-    final data = json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final data =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final expireDate = DateTime.parse(data['expiredDate']);
+    if (expireDate.isBefore(DateTime.now())) {
+      return false;
+    }
     _token = data['token'];
     _userID = data['userId'];
     _expireDate = DateTime.parse(data['expiredDate']);
     notifyListeners();
+    _autoLogout();
     return true;
   }
 
-  void _loading(){
-    isLoading = !isLoading;
+  void _saveUserToken(map) async {
+    _token = map['idToken'];
+    _userID = map['localId'];
+    _expireDate = DateTime.now()
+        .add(Duration(seconds: int.parse(map['expiresIn'])));
     notifyListeners();
-  }
-
-  void _saveUserToken(map)async{
-    if(map['idToken'] == null)
-      return;
     final prefs = await SharedPreferences.getInstance();
     final userData = json.encode(
       {
-        'token': map['idToken'],
-        'userId': map['localId'],
-        'expiredDate': DateTime.now().add(Duration(seconds: int.parse(map['expiresIn']))).toIso8601String(),
+        'token': _token,
+        'userId': _userID,
+        'expiredDate': _expireDate.toIso8601String(),
       },
     );
     prefs.setString("userData", userData);
-    tryAutoLogin();
   }
 
-  Future<void> login(String email, String pass) async{
-      return _auth(urlSegment: _LOGIN, email: email, pass: pass);
+  Future<void> login(String email, String pass) async {
+    return _auth(urlSegment: _LOGIN, email: email, pass: pass);
   }
 
   Future<void> signUp(String name, String email, String pass) async {
-    return _auth(
-        urlSegment: _SIGN_UP, email: email, pass: pass, name: name);
+    await _auth(urlSegment: _SIGN_UP, email: email, pass: pass, name: name);
+    changeLoginStatus();
+  }
+
+  Future<void> logout() async {
+    _token = null;
+    _userID = null;
+    _expireDate = null;
+    if (_authTimer != null) {
+      _authTimer.cancel();
+      _authTimer = null;
+    }
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+  }
+
+  void _autoLogout() {
+    if (_authTimer != null) {
+      _authTimer.cancel();
+    }
+    final timeToExpiry = _expireDate.difference(DateTime.now()).inSeconds;
+    _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 
   String authError(String error) {
     if (error.toString().contains('EMAIL_EXISTS'))
       return 'This email address is already in use.';
-     else if (error.toString().contains('INVALID_EMAIL'))
+    else if (error.toString().contains('INVALID_EMAIL'))
       return 'This is not a valid email address';
-     else if (error.toString().contains('WEAK_PASSWORD'))
+    else if (error.toString().contains('WEAK_PASSWORD'))
       return 'This password is too weak.';
-     else if (error.toString().contains('EMAIL_NOT_FOUND'))
+    else if (error.toString().contains('EMAIL_NOT_FOUND'))
       return 'Could not find a user with that email.';
-     else if (error.toString().contains('INVALID_PASSWORD'))
+    else if (error.toString().contains('INVALID_PASSWORD'))
       return 'Invalid password.';
-     else
+    else
       return "Authentication failed";
   }
 }
