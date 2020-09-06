@@ -1,7 +1,9 @@
+import 'package:book_store/providers/UserProvider.dart';
+import 'package:book_store/screens/AuthScreen.dart';
 import 'package:book_store/screens/UploadBookScreen.dart';
 import 'package:book_store/widgets/DrawerItem.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -36,7 +38,9 @@ class AppDrawer extends StatelessWidget {
           }),
           Divider(),
           DrawerItem(Icons.exit_to_app, "Sign out", (){
-
+//            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed(AuthScreen.ROUTE_NAME);
+            Provider.of<UserProvider>(context, listen: false).logout();
           }),
         ],
       ),
