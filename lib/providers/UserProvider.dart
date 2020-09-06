@@ -1,16 +1,36 @@
 import 'dart:convert';
 
 import 'package:book_store/models/HttpException.dart';
-import 'package:book_store/models/UserToken.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
   var isLoading = false;
   var isLogin = true;
+  String _token ;
+  String _userID;
+  DateTime _expireDate;
   static const String _LOGIN="verifyPassword";
   static const String _SIGN_UP="signupNewUser";
+
+  String get token {
+    if (_expireDate != null &&
+        _expireDate.isAfter(DateTime.now()) &&
+        _token != null) {
+      return _token;
+    }
+    return null;
+  }
+
+  bool get isAuth {
+    return token != null;
+  }
+
+  String get userId {
+    return _userID;
+  }
 
   void changeLoginStatus() {
     isLogin = !isLogin;
@@ -23,9 +43,7 @@ class UserProvider with ChangeNotifier {
     String email,
     String pass,
   }) async {
-    isLoading = true;
-    notifyListeners();
-
+    _loading();
     final url =
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$urlSegment?key=AIzaSyC8t22p96pJ1RCWwTcXhfUF5l_IWpGdVBw';
 
@@ -36,21 +54,47 @@ class UserProvider with ChangeNotifier {
             "displayName": name,
             'returnSecureToken': true,
           }));
-
       final responseData = json.decode(response.body);
-      isLoading = false;
-      notifyListeners();
+      _loading();
       if (responseData["error"] != null)
         throw HttpException(responseData["error"]["message"]);
       else if(urlSegment==_SIGN_UP)
         changeLoginStatus();
-    saveUserToken(responseData);
+    _saveUserToken(responseData);
   }
 
-  UserToken saveUserToken(map){
-    final x = UserToken(map['idToken'],map['userId'],map['expiryDate']);
-    print(("Token: ${x.token}"));
-    return x;
+
+  Future<bool> tryAutoLogin()async{
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+    final data = json.decode(prefs.getString('userData')) as Map<String, Object>;
+    _token = data['token'];
+    _userID = data['userId'];
+    _expireDate = DateTime.parse(data['expiredDate']);
+    notifyListeners();
+    return true;
+  }
+
+  void _loading(){
+    isLoading = !isLoading;
+    notifyListeners();
+  }
+
+  void _saveUserToken(map)async{
+    if(map['idToken'] == null)
+      return;
+    final prefs = await SharedPreferences.getInstance();
+    final userData = json.encode(
+      {
+        'token': map['idToken'],
+        'userId': map['localId'],
+        'expiredDate': DateTime.now().add(Duration(seconds: int.parse(map['expiresIn']))).toIso8601String(),
+      },
+    );
+    prefs.setString("userData", userData);
+    tryAutoLogin();
   }
 
   Future<void> login(String email, String pass) async{

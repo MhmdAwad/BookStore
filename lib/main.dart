@@ -4,6 +4,7 @@ import 'package:book_store/providers/UserProvider.dart';
 import 'package:book_store/screens/AuthScreen.dart';
 import 'package:book_store/screens/MainCategoryScreen.dart';
 import 'package:book_store/screens/SpecificCategory.dart';
+import 'package:book_store/screens/SplashScreen.dart';
 import 'package:book_store/screens/UploadBookScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,18 @@ class MyApp extends StatelessWidget {
             accentColor: Colors.deepOrange,
             textTheme: ThemeData.light().textTheme.copyWith(
                 headline6: TextStyle(fontSize: 20, color: Colors.black))),
-        home: AuthScreen(),
+        home: Consumer<UserProvider>(
+          builder: (ctx, auth,child)=>  auth.isAuth
+              ? MainCategoryScreen()
+              : FutureBuilder(
+            future: auth.tryAutoLogin(),
+            builder: (ctx, authResultSnapshot) =>
+            authResultSnapshot.connectionState ==
+                ConnectionState.waiting
+                ? SplashScreen()
+                : AuthScreen(),
+          ),
+        ),
         routes: {
           SpecificCategory.ROUTE_NAME: (ctx) => SpecificCategory(),
           UploadBookScreen.ROUTE_NAME: (ctx) => UploadBookScreen()
