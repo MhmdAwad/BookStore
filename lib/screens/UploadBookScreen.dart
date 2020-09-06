@@ -17,7 +17,7 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
   final _bookNameController = TextEditingController();
   final _bookUrlController = TextEditingController();
   final _bookDescriptionController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   BooksProvider _booksProvider;
   String _dropdownValue = 'Horror Novel';
   final _spinnerItems = [
