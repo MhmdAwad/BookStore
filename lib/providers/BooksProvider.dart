@@ -7,10 +7,13 @@ import 'package:http/http.dart' as http;
 class BooksProvider with ChangeNotifier {
   bool isLoading = false;
   List<Books> _booksList = [];
-  final String _token;
-  final String _userID;
+  String _token;
+   String _userID;
 
-  BooksProvider(this._token, this._userID);
+  void update(token, userId ){
+    this._token = token;
+    this._userID = userId;
+  }
 
   String get userId {
       return _userID;

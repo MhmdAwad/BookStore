@@ -6,14 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class CategoriesProvider with ChangeNotifier {
-  final String _token;
-  final String _userID;
-
-  CategoriesProvider(this._token, this._userID);
+   String _token;
+   String _userID;
+   void update(token, userId ){
+     this._token = token;
+     this._userID = userId;
+   }
 
   List<Categories> _categoriesList = [];
 
-  Future<void> fetchCategories() async{
+  void fetchCategories() async{
       final response = await http.get("https://bookstore-fbf66.firebaseio.com/categories/.json?auth=$_token",);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {

@@ -4,12 +4,22 @@ import 'package:book_store/widgets/GridViewBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MainCategoryScreen extends StatelessWidget {
+class MainCategoryScreen extends StatefulWidget {
   static const String ROUTE_NAME = "MainCategoryScreen";
 
   @override
-  Widget build(BuildContext context) {
+  _MainCategoryScreenState createState() => _MainCategoryScreenState();
+}
+
+class _MainCategoryScreenState extends State<MainCategoryScreen> {
+  @override
+  void initState() {
     Provider.of<CategoriesProvider>(context, listen: false).fetchCategories();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         drawer: AppDrawer(),
         appBar: AppBar(

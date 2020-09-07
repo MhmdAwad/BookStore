@@ -20,16 +20,14 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (ctx) => UserProvider()),
         ChangeNotifierProxyProvider<UserProvider, BooksProvider>(
-          update: (ctx, auth, _) => BooksProvider(
-            auth.token,
-            auth.userId,
-          ),
+          create: (_) => BooksProvider(),
+          update: (_, myModel, myNotifier) =>
+              myNotifier..update(myModel.token, myModel.userId),
         ),
         ChangeNotifierProxyProvider<UserProvider, CategoriesProvider>(
-          update: (ctx, auth, _) => CategoriesProvider(
-            auth.token,
-            auth.userId,
-          ),
+          create: (_) => CategoriesProvider(),
+          update: (_, myModel, myNotifier) =>
+              myNotifier..update(myModel.token, myModel.userId),
         ),
       ],
       child: Consumer<UserProvider>(
