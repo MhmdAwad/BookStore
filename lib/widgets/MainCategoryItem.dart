@@ -12,7 +12,10 @@ class MainCategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.of(context).pushNamed(SpecificCategory.ROUTE_NAME, arguments: category.id);
+        Navigator.of(context).pushNamed(SpecificCategory.ROUTE_NAME, arguments: {
+          "id":category.id,
+          "title":category.title
+        });
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),

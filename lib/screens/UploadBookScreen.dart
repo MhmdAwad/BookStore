@@ -56,16 +56,17 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
           .uploadNewBook(
           Books(
               "5454",
-              "hell",
+              _bookNameController.text,
               "54545",
               0,
               "4",
               _bookUrlController.text,
-              _bookImageController.text,
+              "https://www.kutub-pdf.net/assets/bimgs/kutub-pdf.net_n5ojpqg.png",
               _bookDescriptionController.text),
           _dropdownValue);
       showSnackBar(true);
     }catch(error) {
+      print("eeeee $error");
       showSnackBar(false);
     }
   }

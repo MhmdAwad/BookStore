@@ -8,7 +8,7 @@ class BooksProvider with ChangeNotifier {
   bool isLoading = false;
   List<Books> _booksList = [];
   String _token;
-   String _userID;
+  String _userID;
 
   void update(token, userId ){
     this._token = token;
@@ -35,11 +35,14 @@ class BooksProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
     http.Response res = await http.put(
-        "https://bookstore-fbf66.firebaseio.com/books/${book.bookTitle}.json",
+        "https://bookstore-fbf66.firebaseio.com/books/${book.bookTitle}.json?auth=$_token",
         body: jsonEncode(book.toJson()));
     isLoading = false;
     notifyListeners();
-    if (res.statusCode != 200) throw Exception();
+    final checkErrors = json.decode(res.body)['error'];
+    print("AAAAAAAAAAA ${json.decode(res.body)}");
+    if(checkErrors != null)
+       throw HttpException(checkErrors);
   }
 
   List<Books> get booksList {

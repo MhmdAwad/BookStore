@@ -1,5 +1,6 @@
 import 'package:book_store/models/HttpException.dart';
 import 'package:book_store/providers/BooksProvider.dart';
+import 'package:book_store/widgets/GridViewBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,10 +14,12 @@ class SpecificCategory extends StatefulWidget {
 class _SpecificCategoryState extends State<SpecificCategory> {
   bool errorOccurred = false;
   bool isInit = true;
+  String _categoryID;
+  String _categoryTitle;
 
   @override
   void didChangeDependencies() {
-    if(isInit){
+    if (isInit) {
       fetchData();
       isInit = false;
     }
@@ -29,24 +32,34 @@ class _SpecificCategoryState extends State<SpecificCategory> {
     });
   }
 
-  void fetchData()async{
-    String categoryID = ModalRoute.of(context).settings.arguments;
+  void fetchData() async {
+    final args =
+        ModalRoute.of(context).settings.arguments as Map<String, String>;
+    _categoryID = args['id'];
+    _categoryTitle = args['title'];
+
     try {
       await Provider.of<BooksProvider>(context, listen: false)
-          .fetchBooksByCategory(categoryID);
-    }catch (error) {
-      print("ZXXXXXXXXXXXXXXX $error");
+          .fetchBooksByCategory(_categoryID);
+    } catch (error) {
       changeError();
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Consumer<BooksProvider>(
-          builder: (ctx, data, _) => Text(
-                errorOccurred?"ERROR":"${data.booksList.length}",
-                textAlign: TextAlign.center,
-              )),
+    return Scaffold(
+      appBar: AppBar(title: Text(_categoryTitle)),
+      body: Consumer<BooksProvider>(
+          builder: (ctx, data, _) => data.booksList.isEmpty
+              ? Text(
+                  "Empty",
+                  textAlign: TextAlign.center,
+                )
+              : GridViewBuilder(
+                  isMainCategory: false,
+                  list: data.booksList,
+                )),
     );
   }
 }

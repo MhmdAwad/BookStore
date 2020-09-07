@@ -1,4 +1,4 @@
-import 'package:book_store/screens/SpecificCategory.dart';
+import 'package:book_store/widgets/BooksItem.dart';
 import 'package:flutter/material.dart';
 
 import 'MainCategoryItem.dart';
@@ -14,11 +14,11 @@ class GridViewBuilder extends StatelessWidget {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           mainAxisSpacing: 10,
-          crossAxisCount: 2,
-          childAspectRatio: 3/2,
+          crossAxisCount: isMainCategory?2:3,
+          childAspectRatio: isMainCategory?3/2:3/4.1,
           crossAxisSpacing: 10
       ),
-      itemBuilder: (ctx, i) => isMainCategory? MainCategoryItem(list[i]): SpecificCategory(),
+      itemBuilder: (ctx, i) => isMainCategory? MainCategoryItem(list[i]): BooksItem(list[i]),
       itemCount: list.length,
     );
   }
