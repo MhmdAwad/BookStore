@@ -4,7 +4,7 @@ class Books{
   final String bookTitle;
   final String uploaderId;
   final int rating;
-  final int categoryId;
+  final String categoryId;
   final String bookPDF;
   final String bookCover;
   final String bookDescription;
@@ -13,7 +13,7 @@ class Books{
   Books(this.bookId, this.bookTitle, this.uploaderId,
       this.rating, this.categoryId,this.bookPDF, this.bookCover,this.bookDescription);
 
-  static Books fromJson(Map<String, dynamic> map){
+  static Books fromJson(map){
     return Books(
         map["bookId"],
         map["bookTitle"],
@@ -25,6 +25,7 @@ class Books{
         map["bookDescription"]
     );
   }
+
   Map<String, Object> toJson(){
     return {
       "bookId":bookId,

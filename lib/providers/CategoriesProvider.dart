@@ -14,7 +14,7 @@ class CategoriesProvider with ChangeNotifier {
   List<Categories> _categoriesList = [];
 
   Future<void> fetchCategories() async{
-      final response = await http.get("https://bookstore-fbf66.firebaseio.com/categories/.json",);
+      final response = await http.get("https://bookstore-fbf66.firebaseio.com/categories/.json?auth=$_token",);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
@@ -26,7 +26,6 @@ class CategoriesProvider with ChangeNotifier {
       notifyListeners();
   }
 
-// TODO added token to get data from firebase
   List<Categories> get categoryList {
     return [..._categoriesList];
   }

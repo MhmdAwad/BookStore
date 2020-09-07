@@ -59,7 +59,7 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
               "hell",
               "54545",
               0,
-              4,
+              "4",
               _bookUrlController.text,
               _bookImageController.text,
               _bookDescriptionController.text),

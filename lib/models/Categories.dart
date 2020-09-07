@@ -1,5 +1,5 @@
 class Categories {
-  final int id;
+  final String id;
   final String imageUrl;
   final String title;
 

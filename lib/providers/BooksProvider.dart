@@ -1,4 +1,5 @@
 import 'package:book_store/models/Books.dart';
+import 'package:book_store/models/HttpException.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -6,17 +7,25 @@ import 'package:http/http.dart' as http;
 class BooksProvider with ChangeNotifier {
   bool isLoading = false;
   List<Books> _booksList = [];
+  final String _token;
+  final String _userID;
 
-  Future<void> fetchBooksByCategory(int categoryID) async {
-    final response = await http.get(
-        'https://bookstore-fbf66.firebaseio.com/books.json?orderBy="categoryId"&equalTo=$categoryID');
-    final fetchData = json.decode(response.body) as Map<String, dynamic>;
-    _booksList.clear();
-    fetchData.forEach((key, value) {
-      _booksList.add(Books.fromJson(value));
-    });
-    notifyListeners();
-    print(fetchData);
+  BooksProvider(this._token, this._userID);
+
+  String get userId {
+      return _userID;
+  }
+  Future<void> fetchBooksByCategory(String categoryID) async {
+    String url ='https://bookstore-fbf66.firebaseio.com/books.json?auth=$_token&orderBy="categoryId"&equalTo="$categoryID"';
+      final response = await http.get(url);
+      final fetchData = json.decode(response.body) as Map<String, dynamic>;
+      if (fetchData["error"] != null)
+        throw HttpException(fetchData["error"]);
+      _booksList.clear();
+      fetchData.forEach((key, value) {
+        _booksList.add(Books.fromJson(value));
+      });
+      notifyListeners();
   }
 
   Future<void> uploadNewBook(Books book, String category) async {
