@@ -56,11 +56,10 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
           .uploadNewBook(
           Books(
               "5454",
-              _bookNameController.text,
-              "Mhmd",
+              "hell",
               "54545",
               0,
-              2,
+              4,
               _bookUrlController.text,
               _bookImageController.text,
               _bookDescriptionController.text),

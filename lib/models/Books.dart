@@ -2,7 +2,6 @@ class Books{
 
   final String bookId;
   final String bookTitle;
-  final String uploaderName;
   final String uploaderId;
   final int rating;
   final int categoryId;
@@ -10,14 +9,26 @@ class Books{
   final String bookCover;
   final String bookDescription;
 
-  Books(this.bookId, this.bookTitle, this.uploaderName, this.uploaderId,
+
+  Books(this.bookId, this.bookTitle, this.uploaderId,
       this.rating, this.categoryId,this.bookPDF, this.bookCover,this.bookDescription);
 
+  static Books fromJson(Map<String, dynamic> map){
+    return Books(
+        map["bookId"],
+        map["bookTitle"],
+        map["uploaderId"],
+        map["rating"],
+        map["categoryId"],
+        map["bookPDF"],
+        map["bookCover"],
+        map["bookDescription"]
+    );
+  }
   Map<String, Object> toJson(){
     return {
       "bookId":bookId,
       "bookTitle":bookTitle,
-      "uploaderName":uploaderName,
       "uploaderId":uploaderId,
       "rating":rating,
       "categoryId":categoryId,

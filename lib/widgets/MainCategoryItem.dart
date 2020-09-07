@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:book_store/models/Categories.dart';
 import 'package:book_store/screens/SpecificCategory.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainCategoryItem extends StatelessWidget {
@@ -13,7 +12,7 @@ class MainCategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.of(context).pushNamed(SpecificCategory.ROUTE_NAME, arguments: category.title);
+        Navigator.of(context).pushNamed(SpecificCategory.ROUTE_NAME, arguments: category.id);
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),

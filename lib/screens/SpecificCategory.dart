@@ -7,12 +7,15 @@ class SpecificCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String category = ModalRoute.of(context).settings.arguments;
-    final booksProvider = Provider.of<BooksProvider>(context, listen: false);
-    final booksList = Provider.of<BooksProvider>(context, listen: false).booksList;
+    int categoryID = ModalRoute.of(context).settings.arguments;
+    Provider.of<BooksProvider>(context, listen: false).fetchBooksByCategory(categoryID);
 
     return Container(
-      child: Text(booksList[0].bookTitle, textAlign: TextAlign.center,),
+      child: Consumer<BooksProvider>(
+          builder: (ctx, data, _) => Text(
+                "${data.booksList.length}",
+                textAlign: TextAlign.center,
+              )),
     );
   }
 }
