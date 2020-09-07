@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 
 class CategoriesProvider with ChangeNotifier{
-//  final String _token;
-//  final String _userID;
-//  CategoriesProvider(this._token, this._userID);
+  final String _token;
+  final String _userID;
+  CategoriesProvider(this._token, this._userID);
 
   List<Categories> _categoriesList = [
     Categories(
@@ -39,7 +39,7 @@ class CategoriesProvider with ChangeNotifier{
       "Islamic Books",
     ),
   ];
-
+// TODO added token to get data from firebase
   List<Categories> get categoryItems{
     return [..._categoriesList];
   }
