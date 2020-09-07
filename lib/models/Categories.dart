@@ -3,5 +3,5 @@ class Categories {
   final String imageUrl;
   final String title;
 
-  Categories(this.id,this.imageUrl, this.title);
+  Categories(this.title,this.id,{this.imageUrl});
 }

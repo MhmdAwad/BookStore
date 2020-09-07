@@ -19,15 +19,15 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => UserProvider()),
-        ChangeNotifierProxyProvider<UserProvider, BooksProvider>(
-          create: (_) => BooksProvider(),
-          update: (_, myModel, myNotifier) =>
-              myNotifier..update(myModel.token, myModel.userId),
-        ),
         ChangeNotifierProxyProvider<UserProvider, CategoriesProvider>(
           create: (_) => CategoriesProvider(),
           update: (_, myModel, myNotifier) =>
               myNotifier..update(myModel.token, myModel.userId),
+        ),
+        ChangeNotifierProxyProvider<CategoriesProvider, BooksProvider>(
+          create: (_) => BooksProvider(),
+          update: (_, myModel, myNotifier) => myNotifier
+            ..update(myModel.token, myModel.userID, myModel.categoryList),
         ),
       ],
       child: Consumer<UserProvider>(

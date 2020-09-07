@@ -13,6 +13,8 @@ class CategoriesProvider with ChangeNotifier {
      this._userID = userId;
    }
 
+   String get userID => _userID;
+   String get token => _token;
   List<Categories> _categoriesList = [];
 
   void fetchCategories() async{
@@ -23,7 +25,7 @@ class CategoriesProvider with ChangeNotifier {
       }
       _categoriesList.clear();
       extractedData.forEach((key, value) {
-        _categoriesList.add(Categories(value['catID'], value['catImage'], key));
+        _categoriesList.add(Categories(key,value['catID'], imageUrl: value['catImage']));
       });
       notifyListeners();
   }

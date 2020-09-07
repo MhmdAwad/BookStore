@@ -1,4 +1,5 @@
 import 'package:book_store/models/Books.dart';
+import 'package:book_store/models/Categories.dart';
 import 'package:book_store/models/HttpException.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -10,9 +11,19 @@ class BooksProvider with ChangeNotifier {
   String _token;
   String _userID;
 
-  void update(token, userId ){
+  List<Categories> _spinnerItems = [
+//    Categories('Horror Novel', "3"),
+//    Categories('Arabic Novels',"1",),
+//    Categories('Foreign Novels',"2",),
+//    Categories('Translated Novels',"6",),
+//    Categories('Romantic Novels', "4",),
+//    Categories('Islamic Books', "5")
+  ];
+
+  void update(token, userId, categoryItems){
     this._token = token;
     this._userID = userId;
+    this._spinnerItems = categoryItems;
   }
 
   String get userId {
@@ -42,12 +53,28 @@ class BooksProvider with ChangeNotifier {
     isLoading = false;
     notifyListeners();
     final checkErrors = json.decode(res.body)['error'];
-    print("AAAAAAAAAAA ${json.decode(res.body)}");
     if(checkErrors != null)
        throw HttpException(checkErrors);
+  }
+
+
+  void fetchNewCategories(){
+
+  }
+  List<String> get spinnerTitles{
+    List<String> _spinnerTitles =[];
+    _spinnerItems.forEach((e) {
+      _spinnerTitles.add(e.title);
+    });
+    return _spinnerTitles;
+  }
+  String spinnerItemId(String cat){
+    return _spinnerItems.firstWhere((element) => element.title == cat).id;
   }
 
   List<Books> get booksList {
     return [..._booksList];
   }
+
+
 }
