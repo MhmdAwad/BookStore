@@ -28,6 +28,8 @@ class BooksProvider with ChangeNotifier {
       fetchData.forEach((key, value) {
         _booksList.add(Books.fromJson(value));
       });
+      if(_booksList.isEmpty)
+        throw HttpException("no data");
       notifyListeners();
   }
 

@@ -1,5 +1,5 @@
-import 'package:book_store/models/HttpException.dart';
 import 'package:book_store/providers/BooksProvider.dart';
+import 'package:book_store/utils/WidgetStatus.dart';
 import 'package:book_store/widgets/GridViewBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,10 +12,10 @@ class SpecificCategory extends StatefulWidget {
 }
 
 class _SpecificCategoryState extends State<SpecificCategory> {
-  bool errorOccurred = false;
   bool isInit = true;
   String _categoryID;
   String _categoryTitle;
+  WidgetStatus _status = WidgetStatus.LOADING;
 
   @override
   void didChangeDependencies() {
@@ -26,9 +26,9 @@ class _SpecificCategoryState extends State<SpecificCategory> {
     super.didChangeDependencies();
   }
 
-  void changeError() {
+  void changeStatus(st) {
     setState(() {
-      errorOccurred = !errorOccurred;
+      _status = st;
     });
   }
 
@@ -39,10 +39,12 @@ class _SpecificCategoryState extends State<SpecificCategory> {
     _categoryTitle = args['title'];
 
     try {
+      changeStatus(WidgetStatus.LOADING);
       await Provider.of<BooksProvider>(context, listen: false)
           .fetchBooksByCategory(_categoryID);
+      changeStatus(WidgetStatus.SUCCESS);
     } catch (error) {
-      changeError();
+      changeStatus(WidgetStatus.FAILED);
     }
   }
 
@@ -51,15 +53,17 @@ class _SpecificCategoryState extends State<SpecificCategory> {
     return Scaffold(
       appBar: AppBar(title: Text(_categoryTitle)),
       body: Consumer<BooksProvider>(
-          builder: (ctx, data, _) => data.booksList.isEmpty
-              ? Text(
-                  "Empty",
-                  textAlign: TextAlign.center,
-                )
-              : GridViewBuilder(
-                  isMainCategory: false,
-                  list: data.booksList,
-                )),
+          builder: (ctx, data, _) => _status == WidgetStatus.LOADING
+              ? Center(child: CircularProgressIndicator())
+              : _status == WidgetStatus.FAILED
+                  ? Text(
+                      "Empty",
+                      textAlign: TextAlign.center,
+                    )
+                  : GridViewBuilder(
+                      isMainCategory: false,
+                      list: data.booksList,
+                    )),
     );
   }
 }
