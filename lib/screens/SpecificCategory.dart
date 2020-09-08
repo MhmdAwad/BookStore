@@ -1,5 +1,6 @@
 import 'package:book_store/providers/BooksProvider.dart';
 import 'package:book_store/utils/WidgetStatus.dart';
+import 'package:book_store/widgets/EmptyWidget.dart';
 import 'package:book_store/widgets/GridViewBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,10 +57,7 @@ class _SpecificCategoryState extends State<SpecificCategory> {
           builder: (ctx, data, _) => _status == WidgetStatus.LOADING
               ? Center(child: CircularProgressIndicator())
               : _status == WidgetStatus.FAILED
-                  ? Text(
-                      "Empty",
-                      textAlign: TextAlign.center,
-                    )
+                  ? EmptyWidget()
                   : GridViewBuilder(
                       isPublished: true,
                       isMainCategory: false,
