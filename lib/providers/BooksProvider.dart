@@ -48,20 +48,15 @@ class BooksProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
     http.Response res = await http.put(
-        "https://bookstore-fbf66.firebaseio.com/books/${book.bookTitle}.json?auth=$_token",
+        "https://bookstore-fbf66.firebaseio.com/pinned/${book.bookTitle}.json?auth=$_token",
         body: jsonEncode(book.toJson()));
     isLoading = false;
     notifyListeners();
-    print("ssssssssssssss $_token\n${json.decode(res.body)}");
     final checkErrors = json.decode(res.body)['error'];
     if(checkErrors != null)
        throw HttpException(checkErrors);
   }
 
-
-  void fetchNewCategories(){
-
-  }
   List<String> get spinnerTitles{
     List<String> _spinnerTitles =[];
     _spinnerItems.forEach((e) {

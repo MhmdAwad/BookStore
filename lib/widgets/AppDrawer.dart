@@ -38,7 +38,7 @@ class AppDrawer extends StatelessWidget {
           }),
           Divider(),
           DrawerItem(Icons.exit_to_app, "Sign out", (){
-//            Navigator.of(context).pop();
+            Navigator.of(context).pop();
             Navigator.of(context).pushReplacementNamed(AuthScreen.ROUTE_NAME);
             Provider.of<UserProvider>(context, listen: false).logout();
           }),
