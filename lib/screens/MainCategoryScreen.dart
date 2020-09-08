@@ -45,6 +45,7 @@ class _MainCategoryScreenState extends State<MainCategoryScreen> {
                 title: Text("All Categories"),
               ),
               body: GridViewBuilder(
+                isPublished: true,
                 isMainCategory: true,
                 list: data.categoryList,
               ),

@@ -61,6 +61,7 @@ class _SpecificCategoryState extends State<SpecificCategory> {
                       textAlign: TextAlign.center,
                     )
                   : GridViewBuilder(
+                      isPublished: true,
                       isMainCategory: false,
                       list: data.booksList,
                     )),

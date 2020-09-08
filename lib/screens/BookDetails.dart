@@ -1,4 +1,5 @@
 import 'package:book_store/models/Books.dart';
+import 'package:book_store/providers/BooksProvider.dart';
 import 'package:book_store/providers/CategoriesProvider.dart';
 import 'package:book_store/screens/PDFPreviewScreen.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,9 @@ class BookDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Books books = ModalRoute.of(context).settings.arguments;
+    Map<String,Object> data = ModalRoute.of(context).settings.arguments;
+    Books books = data["book"];
+    bool isPublished = data["isPublished"];
     bool isAdmin =
         Provider.of<CategoriesProvider>(context, listen: false).user.isAdmin;
     return Scaffold(
@@ -66,8 +69,8 @@ class BookDetails extends StatelessWidget {
                           ),
                           ...ratingBar(books.rating),
                           Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 RaisedButton(
                                   shape: RoundedRectangleBorder(
@@ -92,6 +95,7 @@ class BookDetails extends StatelessWidget {
                                 if (isAdmin)
                                   Column(
                                     children: [
+                                      if(!isPublished)
                                       RaisedButton(
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(100),
@@ -122,7 +126,10 @@ class BookDetails extends StatelessWidget {
                                           await Provider.of<CategoriesProvider>(
                                               context,
                                               listen: false)
-                                              .deletePinnedBook(books.bookTitle);
+                                              .deletePinnedBook(books.bookTitle, isPublished);
+                                          if(isPublished){
+                                            Provider.of<BooksProvider>(context, listen: false).deleteSpecificBook(books.bookId);
+                                          }
                                           Navigator.of(context).pop();
                                         },
                                       )

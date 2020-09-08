@@ -22,6 +22,12 @@ class BooksProvider with ChangeNotifier {
   String get userId {
       return _userID;
   }
+
+  void deleteSpecificBook(String id){
+    _booksList.removeWhere((element) => element.bookId == id);
+    notifyListeners();
+  }
+
   Future<void> fetchBooksByCategory(String categoryID) async {
     String url ='https://bookstore-fbf66.firebaseio.com/books.json?auth=$_token&orderBy="categoryId"&equalTo="$categoryID"';
       final response = await http.get(url);

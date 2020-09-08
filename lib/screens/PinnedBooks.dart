@@ -12,6 +12,7 @@ class PinnedBooks extends StatelessWidget {
       appBar: AppBar(title: Text("Pinned Books"),),
       body: Consumer<CategoriesProvider>(
         builder: (_, data, child) => GridViewBuilder(
+          isPublished: false,
           isMainCategory: false,
           list: data.booksList,
         ),
