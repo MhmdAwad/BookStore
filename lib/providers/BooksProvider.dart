@@ -11,14 +11,7 @@ class BooksProvider with ChangeNotifier {
   String _token;
   String _userID;
 
-  List<Categories> _spinnerItems = [
-//    Categories('Horror Novel', "3"),
-//    Categories('Arabic Novels',"1",),
-//    Categories('Foreign Novels',"2",),
-//    Categories('Translated Novels',"6",),
-//    Categories('Romantic Novels', "4",),
-//    Categories('Islamic Books', "5")
-  ];
+  List<Categories> _spinnerItems = [];
 
   void update(token, userId, categoryItems){
     this._token = token;
