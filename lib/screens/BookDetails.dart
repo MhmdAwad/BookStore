@@ -1,4 +1,5 @@
 import 'package:book_store/models/Books.dart';
+import 'package:book_store/screens/PDFPreviewScreen.dart';
 import 'package:flutter/material.dart';
 
 class BookDetails extends StatelessWidget {
@@ -70,7 +71,9 @@ class BookDetails extends StatelessWidget {
                                   ),
                                   child: Image.asset("assets/images/book.png", color: Colors.white,),
                                   color: Theme.of(context).accentColor,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(PDFPreviewScreen.ROUTE_NAME, arguments: books.bookPDF);
+                                  },
                                 ),
                                 SizedBox(width: 4,),
                                 RaisedButton(

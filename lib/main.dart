@@ -4,6 +4,7 @@ import 'package:book_store/providers/UserProvider.dart';
 import 'package:book_store/screens/AuthScreen.dart';
 import 'package:book_store/screens/BookDetails.dart';
 import 'package:book_store/screens/MainCategoryScreen.dart';
+import 'package:book_store/screens/PDFPreviewScreen.dart';
 import 'package:book_store/screens/SpecificCategory.dart';
 import 'package:book_store/screens/SplashScreen.dart';
 import 'package:book_store/screens/UploadBookScreen.dart';
@@ -53,7 +54,8 @@ class MyApp extends StatelessWidget {
             AuthScreen.ROUTE_NAME: (ctx) => AuthScreen(),
             SpecificCategory.ROUTE_NAME: (ctx) => SpecificCategory(),
             UploadBookScreen.ROUTE_NAME: (ctx) => UploadBookScreen(),
-            BookDetails.ROUTE_NAME:(ctx)=> BookDetails()
+            BookDetails.ROUTE_NAME:(ctx)=> BookDetails(),
+            PDFPreviewScreen.ROUTE_NAME:(ctx)=> PDFPreviewScreen()
           },
         ),
       ),
