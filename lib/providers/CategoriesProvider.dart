@@ -25,11 +25,14 @@ class CategoriesProvider with ChangeNotifier {
   String get token => _token;
   List<Categories> _categoriesList = [];
 
-  Future<void> _getPinnedList() async {
+  Future<void> getPinnedList() async {
     final response = await http.get(
       "https://bookstore-fbf66.firebaseio.com/pinned.json?auth=$_token",
     );
     final fetchData = json.decode(response.body) as Map<String, dynamic>;
+    if(fetchData == null)
+      return;
+    booksList.clear();
     fetchData.forEach((key, value) {
       booksList.add(Books.fromJson(value));
     });
@@ -49,7 +52,7 @@ class CategoriesProvider with ChangeNotifier {
       _categoriesList
           .add(Categories(key, value['catID'], imageUrl: value['catImage']));
     });
-    await _getPinnedList();
+    await getPinnedList();
     notifyListeners();
   }
 

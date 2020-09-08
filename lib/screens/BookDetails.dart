@@ -1,6 +1,8 @@
 import 'package:book_store/models/Books.dart';
+import 'package:book_store/providers/CategoriesProvider.dart';
 import 'package:book_store/screens/PDFPreviewScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BookDetails extends StatelessWidget {
   static const String ROUTE_NAME = "BookDetails";
@@ -23,6 +25,8 @@ class BookDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Books books = ModalRoute.of(context).settings.arguments;
+    bool isAdmin =
+        Provider.of<CategoriesProvider>(context, listen: false).user.isAdmin;
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -69,10 +73,17 @@ class BookDetails extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
-                                  child: Image.asset("assets/images/book.png", color: Colors.white,),
+                                  child: Image.asset(
+                                    "assets/images/book.png",
+                                    color: Colors.white,
+                                    height: 18,
+                                    width: 18,
+                                  ),
                                   color: Theme.of(context).accentColor,
                                   onPressed: () {
-                                    Navigator.of(context).pushNamed(PDFPreviewScreen.ROUTE_NAME, arguments: books.bookPDF);
+                                    Navigator.of(context).pushNamed(
+                                        PDFPreviewScreen.ROUTE_NAME,
+                                        arguments: books.bookPDF);
                                   },
                                 ),
                                 SizedBox(width: 4,),
@@ -85,7 +96,6 @@ class BookDetails extends StatelessWidget {
                         height: 10,
                       ),
                       Container(
-                          child: Container(
                         child: Text(
                           "Description: ",
                           style: TextStyle(
@@ -93,7 +103,7 @@ class BookDetails extends StatelessWidget {
                         ),
                         margin: EdgeInsets.only(bottom: 10),
                         alignment: Alignment.centerLeft,
-                      )),
+                      ),
                       Text(
                         books.bookDescription,
                         textAlign: TextAlign.center,

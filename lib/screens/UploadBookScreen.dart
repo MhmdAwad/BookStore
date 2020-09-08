@@ -21,9 +21,6 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
   BooksProvider _booksProvider;
   String _dropdownValue = 'Horror Novel';
 
-
-  // convert TODO convert spinner list to online one
-
   @override
   void dispose() {
     _bookImageController.dispose();
@@ -36,7 +33,6 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
   @override
   void initState() {
     _booksProvider = Provider.of<BooksProvider>(context, listen: false);
-//    spinnerTitles();
     super.initState();
   }
 
@@ -52,12 +48,11 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
               0,
               _booksProvider.spinnerItemId(_dropdownValue),
               _bookUrlController.text,
-              "https://www.kutub-pdf.net/assets/bimgs/kutub-pdf.net_n5ojpqg.png",
+              _bookImageController.text,
               _bookDescriptionController.text),
           _dropdownValue);
       showSnackBar(true);
     } catch (error) {
-      print("eeeee $error");
       showSnackBar(false);
     }
   }
