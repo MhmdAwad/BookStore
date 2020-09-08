@@ -6,14 +6,17 @@ import 'package:flutter/material.dart';
 
 class BooksItem extends StatelessWidget {
   final Books book;
-
-  BooksItem(this.book);
+  final bool isPublished;
+  BooksItem(this.book, this.isPublished);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.of(context).pushNamed(BookDetails.ROUTE_NAME, arguments: book);
+        Navigator.of(context).pushNamed(BookDetails.ROUTE_NAME, arguments: {
+          "book":book,
+          "isPublished":isPublished
+        });
       },
       child: Hero(
         tag: book.bookId,
@@ -23,7 +26,10 @@ class BooksItem extends StatelessWidget {
             elevation: 3,
             child: Stack(
               children: [
-                Image.network(book.bookCover),
+                Center(
+                  child: FadeInImage.assetNetwork(image: book.bookCover, placeholder: "assets/images/placeholder.png",
+                  fit: BoxFit.fill,),
+                ),
                 Positioned(
                   bottom: 0,
                   left: 0,
