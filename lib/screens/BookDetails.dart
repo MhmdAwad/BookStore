@@ -86,7 +86,48 @@ class BookDetails extends StatelessWidget {
                                         arguments: books.bookPDF);
                                   },
                                 ),
-                                SizedBox(width: 4,),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                if (isAdmin)
+                                  Column(
+                                    children: [
+                                      RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(100),
+                                        ),
+                                        child: Icon(
+                                          Icons.done,
+                                          color: Colors.white,
+                                        ),
+                                        color: Theme.of(context).accentColor,
+                                        onPressed: () async {
+                                          await Provider.of<CategoriesProvider>(
+                                              context,
+                                              listen: false)
+                                              .pushPinnedBook(books);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(100),
+                                        ),
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        ),
+                                        color: Theme.of(context).accentColor,
+                                        onPressed: () async {
+                                          await Provider.of<CategoriesProvider>(
+                                              context,
+                                              listen: false)
+                                              .deletePinnedBook(books.bookTitle);
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  )
                               ],
                             ),
                           ),

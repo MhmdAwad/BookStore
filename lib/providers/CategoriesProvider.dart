@@ -38,7 +38,29 @@ class CategoriesProvider with ChangeNotifier {
     });
     values = fetchData.length.toString();
   }
+  Future<void> deletePinnedBook(String bookName) async{
+    await http.delete(
+      "https://bookstore-fbf66.firebaseio.com/pinned/$bookName.json?auth=$_token",
+    );
+    booksList.removeWhere((element) => element.bookTitle == bookName);
+    values = booksList.length.toString();
+    notifyListeners();
+  }
 
+  Future<void> pushPinnedBook(Books book) async{
+   final response = await http.put(
+      "https://bookstore-fbf66.firebaseio.com/books/${book.bookTitle}.json?auth=$_token",
+      body: json.encode(book.toJson())
+    );
+//    booksList.removeWhere((element) => element.bookTitle == bookName);
+//    values = booksList.length.toString();
+//    notifyListeners();
+    print("tttttt ${response.body}");
+  deletePinnedBook(book.bookTitle);
+  }
+  
+  
+  
   void fetchCategories() async {
     final response = await http.get(
       "https://bookstore-fbf66.firebaseio.com/categories/.json?auth=$_token",
