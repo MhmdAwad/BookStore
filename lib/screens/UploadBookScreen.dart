@@ -1,5 +1,4 @@
 import 'package:book_store/models/Books.dart';
-import 'package:book_store/models/Categories.dart';
 import 'package:book_store/providers/BooksProvider.dart';
 import 'package:book_store/widgets/AppDrawer.dart';
 import 'package:flutter/material.dart';
@@ -162,9 +161,12 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
                         },
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1,
+                        maxLines: 5,
                         controller: _bookDescriptionController,
                         decoration:
-                            InputDecoration(labelText: "Book Description"),
+                            InputDecoration(labelText: "Book Description",),
                         textInputAction: TextInputAction.done,
                         validator: (val) {
                           if (val.isEmpty)

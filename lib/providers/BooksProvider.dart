@@ -52,6 +52,7 @@ class BooksProvider with ChangeNotifier {
         body: jsonEncode(book.toJson()));
     isLoading = false;
     notifyListeners();
+    print("ssssssssssssss $_token\n${json.decode(res.body)}");
     final checkErrors = json.decode(res.body)['error'];
     if(checkErrors != null)
        throw HttpException(checkErrors);
