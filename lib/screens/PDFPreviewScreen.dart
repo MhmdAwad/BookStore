@@ -30,9 +30,9 @@ class _PDFPreviewScreenState extends State<PDFPreviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("PDF Preview"),),
+//      appBar: AppBar(title: Text("PDF Preview"),),
       body: Container(
-        child: isLoading?CircularProgressIndicator():PDFViewer(document: doc,),
+        child: isLoading?Center(child: CircularProgressIndicator()):PDFViewer(document: doc,),
       ),
     );
   }

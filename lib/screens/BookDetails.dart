@@ -76,15 +76,6 @@ class BookDetails extends StatelessWidget {
                                   },
                                 ),
                                 SizedBox(width: 4,),
-                                RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child:
-                                      Image.asset("assets/images/download.png", color: Colors.white),
-                                  color: Theme.of(context).accentColor,
-                                  onPressed: () {},
-                                ),
                               ],
                             ),
                           ),

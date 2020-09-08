@@ -1,8 +1,10 @@
 import 'package:book_store/providers/CategoriesProvider.dart';
 import 'package:book_store/widgets/AppDrawer.dart';
 import 'package:book_store/widgets/GridViewBuilder.dart';
+import 'package:book_store/widgets/UploadsNotification.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 
 class MainCategoryScreen extends StatefulWidget {
   static const String ROUTE_NAME = "MainCategoryScreen";
@@ -20,16 +22,21 @@ class _MainCategoryScreenState extends State<MainCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: AppDrawer(),
-        appBar: AppBar(
-          title: Text("All Categories"),
-        ),
-        body: Consumer<CategoriesProvider>(
-          builder: (ctx, data, _) => GridViewBuilder(
-            isMainCategory: true,
-            list: data.categoryList,
-          ),
-        ));
+    return Consumer<CategoriesProvider>(
+        builder: (ctx, data, _) => Scaffold(
+              drawer: AppDrawer(),
+              appBar: AppBar(
+                actions: [
+                  data.user.isAdmin
+                      ? UploadsNotification(value: "5",child: IconButton(icon: Icon(Icons.notifications),onPressed: (){},),)
+                      : Container()
+                ],
+                title: Text("All Categories"),
+              ),
+              body: GridViewBuilder(
+                isMainCategory: true,
+                list: data.categoryList,
+              ),
+            ));
   }
 }
