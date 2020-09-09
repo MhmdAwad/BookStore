@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:book_store/models/HttpException.dart';
 import 'package:book_store/providers/UserProvider.dart';
 import 'package:book_store/widgets/TextFormWidget.dart';
@@ -17,8 +20,17 @@ class AuthScreen extends StatelessWidget {
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            Container(
-              color: Colors.tealAccent,
+            Image.asset(
+              "assets/images/login_book.jpg",
+              height: double.infinity,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            BackdropFilter(
+              child: Container(
+                color: Colors.black12,
+              ),
+              filter: ImageFilter.blur(sigmaY: 3, sigmaX: 3),
             ),
             AuthCard()
           ],
