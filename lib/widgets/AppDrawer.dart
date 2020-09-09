@@ -1,5 +1,6 @@
 import 'package:book_store/providers/UserProvider.dart';
 import 'package:book_store/screens/AuthScreen.dart';
+import 'package:book_store/screens/MyUploadedBooks.dart';
 import 'package:book_store/screens/UploadBookScreen.dart';
 import 'package:book_store/widgets/DrawerItem.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,12 @@ class AppDrawer extends StatelessWidget {
               ),),
             ),
           SizedBox(height: 20,),
-          DrawerItem(Icons.book, "My Books", (){
+          DrawerItem(Icons.dashboard, "Category", (){
             Navigator.of(context).pushReplacementNamed('/');
+          }),
+          Divider(),
+          DrawerItem(Icons.book, "My Books", (){
+            Navigator.of(context).pushReplacementNamed(MyUploadedBooks.ROUTE_NAME);
           }),
           Divider(),
           DrawerItem(Icons.file_upload, "Upload Book", (){

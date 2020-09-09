@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 class BooksProvider with ChangeNotifier {
   bool isLoading = false;
   List<Books> _booksList = [];
+  List<Books> _ownBooksList =[];
   String _token;
   String _userID;
 
@@ -25,6 +26,35 @@ class BooksProvider with ChangeNotifier {
 
   void deleteSpecificBook(String id){
     _booksList.removeWhere((element) => element.bookId == id);
+    notifyListeners();
+  }
+
+//  void fetchData(String url, bool fetchAllBooks) async{
+//    final response = await http.get(url);
+//    final fetchData = json.decode(response.body) as Map<String, dynamic>;
+//    if (fetchData["error"] != null)
+//      throw HttpException(fetchData["error"]);
+//    _ownBooksList.clear();
+//    fetchData.forEach((key, value) {
+//      _ownBooksList.add(Books.fromJson(value));
+//    });
+//    if(_ownBooksList.isEmpty)
+//      throw HttpException("no data");
+//    notifyListeners();
+//
+//  }
+  Future<void> fetchMyBooks() async{
+    String url ='https://bookstore-fbf66.firebaseio.com/books.json?auth=$_token&orderBy="uploaderId"&equalTo="$_userID"';
+    final response = await http.get(url);
+    final fetchData = json.decode(response.body) as Map<String, dynamic>;
+    if (fetchData["error"] != null)
+      throw HttpException(fetchData["error"]);
+    _ownBooksList.clear();
+    fetchData.forEach((key, value) {
+      _ownBooksList.add(Books.fromJson(value));
+    });
+    if(_ownBooksList.isEmpty)
+      throw HttpException("no data");
     notifyListeners();
   }
 
@@ -69,6 +99,9 @@ class BooksProvider with ChangeNotifier {
 
   List<Books> get booksList {
     return [..._booksList];
+  }
+  List<Books> get ownBooksList{
+    return [..._ownBooksList];
   }
 
 
