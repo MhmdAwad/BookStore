@@ -78,6 +78,7 @@ class UserProvider with ChangeNotifier {
       DateTime.parse(data['expiredDate']),
     );
     notifyListeners();
+    _fetchUserData();
     _autoLogout();
     return true;
   }
@@ -157,5 +158,14 @@ class UserProvider with ChangeNotifier {
       return 'Invalid password.';
     else
       return "Authentication failed";
+  }
+
+  void _fetchUserData() async{
+    final response = await http.get(
+        "https://bookstore-fbf66.firebaseio.com/users/${_user.userId}/isAdmin.json?auth=${_user.token}");
+    final extractData = json.decode(response.body);
+    print("ssssssssssss ${extractData}");
+    _user.isAdmin = extractData;
+    notifyListeners();
   }
 }
