@@ -8,11 +8,10 @@ class PinnedBooks extends StatelessWidget {
   static const String ROUTE_NAME ="PinnedBooks";
   @override
   Widget build(BuildContext context) {
-    print("build");
     return Scaffold(
       appBar: AppBar(title: Text("Pinned Books"),),
       body: Consumer<CategoriesProvider>(
-        builder: (_, data, child) => GridViewBuilder(
+        builder: (_, data, child) => data.booksList.isEmpty?EmptyWidget():GridViewBuilder(
           isPublished: false,
           isMainCategory: false,
           list: data.booksList,
