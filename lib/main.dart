@@ -38,8 +38,8 @@ class MyApp extends StatelessWidget {
         builder: (ctx, auth, child) => MaterialApp(
           title: 'BookStore',
           theme: ThemeData(
-              primarySwatch: Colors.purple,
-              accentColor: Colors.deepOrange,
+              primaryColor: Color.fromRGBO(12,5,109, 1.0),
+              accentColor: Color.fromRGBO(242,93,156, 1),
               textTheme: ThemeData.light().textTheme.copyWith(
                   headline6: TextStyle(fontSize: 20, color: Colors.black))),
           home: auth.isAuth
