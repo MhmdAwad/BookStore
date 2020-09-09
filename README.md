@@ -1,5 +1,5 @@
 # BookStore
-My first flutter app that create a reading community by uploading pdf books from users.
+My first flutter app that create a readers community by uploading pdf books from users.
 
 
 # Built With
