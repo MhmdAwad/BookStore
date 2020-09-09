@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<UserProvider, CategoriesProvider>(
           create: (_) => CategoriesProvider(),
           update: (_, myModel, myNotifier) =>
-              myNotifier..update(myModel.token, myModel.userId, myModel.userData),
+              myNotifier..update(myModel.userData),
         ),
         ChangeNotifierProxyProvider<CategoriesProvider, BooksProvider>(
           create: (_) => BooksProvider(),

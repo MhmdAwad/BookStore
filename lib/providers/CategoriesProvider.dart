@@ -8,26 +8,22 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class CategoriesProvider with ChangeNotifier {
-  String _token;
-  String _userID;
-  User _user;
+   User _user;
   List<Books> booksList=[];
   String values= "0";
 
-  void update(token, userId, user) {
-    this._token = token;
-    this._userID = userId;
+  void update(user) {
     this._user = user;
   }
 
   User get user => _user;
-  String get userID => _userID;
-  String get token => _token;
+  String get userID => _user.userId;
+  String get token => _user.token;
   List<Categories> _categoriesList = [];
 
   Future<void> getPinnedList() async {
     final response = await http.get(
-      "https://bookstore-fbf66.firebaseio.com/pinned.json?auth=$_token",
+      "https://bookstore-fbf66.firebaseio.com/pinned.json?auth=$token",
     );
     final fetchData = json.decode(response.body) as Map<String, dynamic>;
     if(fetchData == null)
@@ -40,7 +36,7 @@ class CategoriesProvider with ChangeNotifier {
   }
   Future<void> deletePinnedBook(String bookName, bool isPublished) async{
     await http.delete(
-      "https://bookstore-fbf66.firebaseio.com/${isPublished?"books":"pinned"}/$bookName.json?auth=$_token",
+      "https://bookstore-fbf66.firebaseio.com/${isPublished?"books":"pinned"}/$bookName.json?auth=$token",
     );
     if(!isPublished){
       booksList.removeWhere((element) => element.bookTitle == bookName);
@@ -51,7 +47,7 @@ class CategoriesProvider with ChangeNotifier {
 
   Future<void> pushPinnedBook(Books book) async{
    await http.put(
-      "https://bookstore-fbf66.firebaseio.com/books/${book.bookTitle}.json?auth=$_token",
+      "https://bookstore-fbf66.firebaseio.com/books/${book.bookTitle}.json?auth=$token",
       body: json.encode(book.toJson())
     );
     deletePinnedBook(book.bookTitle, false);
@@ -61,7 +57,7 @@ class CategoriesProvider with ChangeNotifier {
   
   void fetchCategories() async {
     final response = await http.get(
-      "https://bookstore-fbf66.firebaseio.com/categories/.json?auth=$_token",
+      "https://bookstore-fbf66.firebaseio.com/categories/.json?auth=$token",
     );
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     if (extractedData == null) {

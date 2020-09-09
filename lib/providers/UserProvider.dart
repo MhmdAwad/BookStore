@@ -10,9 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
   var isLogin = true;
-  String _token;
-  String _userID;
-  DateTime _expireDate;
   Timer _authTimer;
   User _user;
   static const String _LOGIN = "verifyPassword";
@@ -23,10 +20,10 @@ class UserProvider with ChangeNotifier {
   }
 
   String get token {
-    if (_expireDate != null &&
-        _expireDate.isAfter(DateTime.now()) &&
-        _token != null) {
-      return _token;
+    if (_user != null && _user.expireDate != null &&
+        _user.expireDate.isAfter(DateTime.now()) &&
+        _user.token != null) {
+      return _user.token;
     }
     return null;
   }
@@ -36,7 +33,7 @@ class UserProvider with ChangeNotifier {
   }
 
   String get userId {
-    return _userID;
+    return _user.userId;
   }
 
   void changeLoginStatus() {
@@ -66,27 +63,20 @@ class UserProvider with ChangeNotifier {
     if (!prefs.containsKey('userData')) {
       return false;
     }
-
     final data =
         json.decode(prefs.getString('userData')) as Map<String, Object>;
     final expireDate = DateTime.parse(data['expiredDate']);
     if (expireDate.isBefore(DateTime.now())) {
       return false;
     }
-    _token = data['token'];
-    _userID = data['userId'];
-    _expireDate = DateTime.parse(data['expiredDate']);
-    try{
-      _user = new User(
-        data["name"],
-        data["email"],
-        _userID,
-        data["isAdmin"],
-      );
-    }catch(err){
-      print("eerrrr $err");
-    }
-    print("ooooooooooooooo ${data["name"]}");
+    _user = new User(
+      data["name"],
+      data["email"],
+      data['token'],
+      data['userId'],
+      data["isAdmin"],
+      DateTime.parse(data['expiredDate']),
+    );
     notifyListeners();
     _autoLogout();
     return true;
@@ -104,39 +94,39 @@ class UserProvider with ChangeNotifier {
 
   void addUserInfo(String name, String email) async {
     await http.put(
-        "https://bookstore-fbf66.firebaseio.com/users/$_userID.json?auth=$_token",
-        body: json.encode(
-            {"id": _userID, "name": name, "email": email, "isAdmin": false}));
+        "https://bookstore-fbf66.firebaseio.com/users/${_user.userId}.json?auth=${_user.token}",
+        body: json.encode({
+          "id": _user.userId,
+          "name": name,
+          "email": email,
+          "isAdmin": false
+        }));
   }
 
   void _saveUserData(map) async {
-    _token = map['idToken'];
-    _userID = map['localId'];
-    _expireDate =
-        DateTime.now().add(Duration(seconds: int.parse(map['expiresIn'])));
     //get user data
     final response = await http.get(
-        "https://bookstore-fbf66.firebaseio.com/users/$_userID.json?auth=$_token");
+        "https://bookstore-fbf66.firebaseio.com/users/${map['localId']}.json?auth=${map['idToken']}");
     final exData = json.decode(response.body);
-//    notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     final userData = json.encode(
       {
-        'name':exData["name"],
-        'email':exData["email"],
+        'name': exData["name"],
+        'email': exData["email"],
         "isAdmin": exData["isAdmin"],
-        'token': _token,
-        'userId': _userID,
-        'expiredDate': _expireDate.toIso8601String(),
+        'token': map['idToken'],
+        'userId': map['localId'],
+        'expiredDate': DateTime.now()
+            .add(Duration(seconds: int.parse(map['expiresIn'])))
+            .toIso8601String(),
       },
     );
     prefs.setString("userData", userData);
+    notifyListeners();
   }
 
   Future<void> logout() async {
-    _token = null;
-    _userID = null;
-    _expireDate = null;
+    _user = null;
     if (_authTimer != null) {
       _authTimer.cancel();
       _authTimer = null;
@@ -150,7 +140,7 @@ class UserProvider with ChangeNotifier {
     if (_authTimer != null) {
       _authTimer.cancel();
     }
-    final timeToExpiry = _expireDate.difference(DateTime.now()).inSeconds;
+    final timeToExpiry = _user.expireDate.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 
