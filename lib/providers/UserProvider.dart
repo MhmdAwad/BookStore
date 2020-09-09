@@ -164,7 +164,6 @@ class UserProvider with ChangeNotifier {
     final response = await http.get(
         "https://bookstore-fbf66.firebaseio.com/users/${_user.userId}/isAdmin.json?auth=${_user.token}");
     final extractData = json.decode(response.body);
-    print("ssssssssssss ${extractData}");
     _user.isAdmin = extractData;
     notifyListeners();
   }

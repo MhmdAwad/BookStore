@@ -59,6 +59,7 @@ flutter:
     - assets/images/favorites.png
     - assets/images/placeholder.png
     - assets/images/shelf.png
+    - assets/images/book_background.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
